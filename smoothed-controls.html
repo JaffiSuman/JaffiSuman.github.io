@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	<title>Cube!</title>
+	<title>Hello, AR Cube!</title>
 	<!-- include three.js library -->
 	<script src='js/three.js'></script>
 	<!-- include jsartookit -->
@@ -12,6 +12,7 @@
 	<script src="threex/threex-artoolkitcontext.js"></script>
 	<script src="threex/threex-arbasecontrols.js"></script>
 	<script src="threex/threex-armarkercontrols.js"></script>
+	<script src="threex/threex-arsmoothedcontrols.js"></script>
 </head>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
@@ -25,7 +26,7 @@
 
 var scene, camera, renderer, clock, deltaTime, totalTime;
 
-var arToolkitSource, arToolkitContext;
+var arToolkitSource, arToolkitContext, smoothedControls;
 
 var markerRoot1, markerRoot2;
 
@@ -108,13 +109,27 @@ function initialize()
 	// build markerControls
 	markerRoot1 = new THREE.Group();
 	scene.add(markerRoot1);
+	
 	let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoot1, {
-		type: 'pattern', patternUrl: "data/hiro.patt",
+		type : 'pattern',
+		patternUrl : "data/hiro.patt",
 	})
+
+	// interpolates from last position to create smoother transitions when moving.
+	// parameter lerp values near 0 are slow, near 1 are fast (instantaneous).
+	let smoothedRoot = new THREE.Group();
+	scene.add(smoothedRoot);
+	smoothedControls = new THREEx.ArSmoothedControls(smoothedRoot, {
+		lerpPosition: 0.8,
+		lerpQuaternion: 0.8,
+		lerpScale: 1,
+		// minVisibleDelay: 1,
+		// minUnvisibleDelay: 1,
+	});
 
 	let geometry1	= new THREE.CubeGeometry(1,1,1);
 	let material1	= new THREE.MeshNormalMaterial({
-		transparent: true,
+		transparent : true,
 		opacity: 0.5,
 		side: THREE.DoubleSide
 	}); 
@@ -122,7 +137,8 @@ function initialize()
 	mesh1 = new THREE.Mesh( geometry1, material1 );
 	mesh1.position.y = 0.5;
 	
-	markerRoot1.add( mesh1 );
+	// markerRoot1.add( mesh1 );
+	smoothedRoot.add( mesh1 );
 }
 
 
@@ -131,6 +147,9 @@ function update()
 	// update artoolkit on every frame
 	if ( arToolkitSource.ready !== false )
 		arToolkitContext.update( arToolkitSource.domElement );
+		
+	// additional code for smoothed controls
+	smoothedControls.update(markerRoot1);
 }
 
 
