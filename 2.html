@@ -25,7 +25,7 @@
     align-items: center;
   }
 
-  .arjs-loader div {
+ .arjs-loader div {
     text-align: center;
     font-size: 1.25em;
     color: white;
@@ -33,8 +33,9 @@
 </style>
 
 <body style="margin : 0px; overflow: hidden;">
+  <!-- minimal loader shown until image descriptors are loaded -->
   <div class="arjs-loader">
-    <div>L1...</div>
+    <div>Loading, please wait...</div>
   </div>
   <a-scene
     vr-mode-ui="enabled: false;"
@@ -42,8 +43,7 @@
     embedded
     arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
   >
-
-
+    <!-- we use cors proxy to avoid cross-origin problems -->
     <a-nft
       type="nft"
       url="https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/trex-image/trex"
@@ -52,10 +52,9 @@
       smoothTolerance=".01"
       smoothThreshold="5"
     >
-
       <a-entity
         gltf-model="https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/scene.gltf"
-             scale="5 5 5"
+        scale="5 5 5"
         position="50 150 0"
       >
       </a-entity>
@@ -71,6 +70,5 @@
      <a-asset-item id="tree" src="gltf/scene.gltf"></a-asset-item>
     </a-assets>  -->
 
-    <!--https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/scene.gltf  -->
     
 </html>
