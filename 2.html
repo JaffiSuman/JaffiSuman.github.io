@@ -6,9 +6,7 @@
     <title>Ar.js</title>
     <!-- <script src="js/aframe-master.min.js"></script>
 <script src="js/aframe-ar-nft.js"></script>-->
-
   </head>
-
 
 <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
 <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
@@ -36,7 +34,7 @@
 
 <body style="margin : 0px; overflow: hidden;">
   <div class="arjs-loader">
-    <div>Loading, please wait...</div>
+    <div>L...</div>
   </div>
   <a-scene
     vr-mode-ui="enabled: false;"
@@ -44,6 +42,10 @@
     embedded
     arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
   >
+    <a-assets>
+     <a-asset-item id="tree" src="gltf/scene.gltf"></a-asset-item>
+    </a-assets> 
+
     <a-nft
       type="nft"
       url="anft/heart"
@@ -52,9 +54,6 @@
       smoothTolerance=".01"
       smoothThreshold="5"
     >
-     <a-assets>
-     <a-asset-item id="tree" src="gltf/scene.gltf"></a-asset-item>
-    </a-assets> 
 
       <a-entity
         gltf-model="#tree"
