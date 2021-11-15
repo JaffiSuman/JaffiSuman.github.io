@@ -38,22 +38,23 @@
     embedded
     arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
   >
-  <!-- url="https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/trex-image/trex" -->
+  <!-- url="anft/heart.iset" -->
     <a-nft
       type="nft"
-      url="anft/heart.iset"
+      url="https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/trex-image/trex"
       smooth="true"
       smoothCount="10"
       smoothTolerance=".01"
       smoothThreshold="5"
     >
 
-    <a-assets>
+   <!--  <a-assets>
      <a-asset-item id="tree" src="gltf/scene.gltf"></a-asset-item>
-    </a-assets>
+    </a-assets>  -->
 
     <!-- gltf-model="https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/scene.gltf" -->
-      <a-entity gltf-model = "#tree" 
+      <a-entity gltf-model = "https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/scene.gltf" <!-- "#tree" -->
+
         scale="5 5 5"
         position="50 150 0"
       >
