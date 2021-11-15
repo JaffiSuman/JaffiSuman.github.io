@@ -135,11 +135,11 @@
         var db = indexedDB.open("dummy_indexdb", 1); // iOS 14.6 fix; the call to open indexdb hangs forever otherwise
 
         const buildUrl = "Build";
-        const loaderUrl = buildUrl + "/arZappar.loader.js";
+        const loaderUrl = buildUrl + "/zappar.loader.js";
         const config = {
-            dataUrl: buildUrl + "/arZappar.data",
-            frameworkUrl: buildUrl + "/arZappar.framework.js",
-            codeUrl: buildUrl + "/arZappar.wasm",
+            dataUrl: buildUrl + "/zappar.data",
+            frameworkUrl: buildUrl + "/zappar.framework.js",
+            codeUrl: buildUrl + "/zappar.wasm",
         streamingAssetsUrl: "StreamingAssets",
             companyName: "DefaultCompany",
             productName: "Zappar",
