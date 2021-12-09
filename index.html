@@ -1,198 +1,56 @@
 <!DOCTYPE html>
 <html lang="en-us">
-
-<head>
+  <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Zappar</title>
+    <title>Unity WebGL Player | %UNITY_WEB_NAME%</title>
+    <meta name="description" content="%UNITY_CUSTOM_DESCRIPTION%">
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <style>
-        html {
-            box-sizing: border-box;
-        }
-
-        *,
-        *:before,
-        *:after {
-            box-sizing: inherit;
-        }
-
-        html,
-        body {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-        }
-
-        canvas {
-            display: block;
-        }
-
-        body {
-            margin: 0;
-        }
-
-        #unity-container {
-            width: 100%;
-            height: 100%;
-        }
-
-        #unity-canvas {
-            width: 100%;
-            height: 100%;
-
-            background: #231F20;
-        }
-
-        #loading-cover {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #unity-loading-bar {
-            flex: 1 1 auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #unity-progress-bar-empty {
-            width: 80%;
-            height: 24px;
-            margin: 10px 20px 20px 10px;
-            text-align: left;
-            border: 1px solid white;
-            padding: 2px;
-        }
-
-        #unity-progress-bar-full {
-            width: 0%;
-            height: 100%;
-            background: white;
-        }
-
-        .light #unity-progress-bar-empty {
-            border-color: black;
-        }
-
-        .light #unity-progress-bar-full {
-            background: black;
-        }
-
-        .spinner,
-        .spinner:after {
-            border-radius: 50%;
-            width: 5em;
-            height: 5em;
-        }
-
-        .spinner {
-            margin: 10px;
-            font-size: 10px;
-            position: relative;
-            text-indent: -9999em;
-            border-top: 1.1em solid rgba(255, 255, 255, 0.2);
-            border-right: 1.1em solid rgba(255, 255, 255, 0.2);
-            border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
-            border-left: 1.1em solid #ffffff;
-            transform: translateZ(0);
-            animation: spinner-spin 1.1s infinite linear;
-        }
-
-        @keyframes spinner-spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
-</head>
-
-<body class="dark">
-    <div id="unity-container" class="unity-desktop">
-        <canvas id="unity-canvas"></canvas>
-    </div>
-    <div id="loading-cover" style="display:none;">
-        <div id="unity-loading-bar">
-            <div id="unity-progress-bar-empty" style="display: none;">
-                <div id="unity-progress-bar-full"></div>
-            </div>
-            <div class="spinner"></div>
-        </div>
-    </div>
-    <script type="text/javascript" src="https://libs.zappar.com/zappar-cv/0.3.12/zappar-cv.js"></script>
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="TemplateData/UnityProgress.js"></script>
+    <script src="%UNITY_WEBGL_LOADER_URL%"></script>
     <script>
-        var db = indexedDB.open("dummy_indexdb", 1); // iOS 14.6 fix; the call to open indexdb hangs forever otherwise
-
-        const buildUrl = "Build";
-        const loaderUrl = buildUrl + "/JaffiSuman.github.io.loader.js";
-        const config = {
-            dataUrl: buildUrl + "/JaffiSuman.github.io.data",
-            frameworkUrl: buildUrl + "/JaffiSuman.github.io.framework.js",
-            codeUrl: buildUrl + "/JaffiSuman.github.io.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-            companyName: "DefaultCompany",
-            productName: "Zappar",
-            productVersion: "0.1",
-        };
-
-        const container = document.querySelector("#unity-container");
-        const canvas = document.querySelector("#unity-canvas");
-        const loadingCover = document.querySelector("#loading-cover");
-        const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
-        const progressBarFull = document.querySelector("#unity-progress-bar-full");
-        const spinner = document.querySelector('.spinner');
-
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-            container.className = "unity-mobile";
-            //config.matchWebGLToCanvasSize = false;    
-            //set devicePixelRatio=1; to avoid draining fillrate performance on mobile and override low DPI mode
-            config.devicePixelRatio = window.devicePixelRatio;
+      UnityLoader.compatibilityCheck = function (unityInstance, onsuccess, onerror) {
+        if (!UnityLoader.SystemInfo.hasWebGL) {
+          unityInstance.popup('Your browser does not support WebGL',
+            [{text: 'OK', callback: onerror}]);
+        } else {
+          onsuccess();
         }
-        loadingCover.style.display = "";
-
-        window.zappar = ZCV.initialize();
-
-        const script = document.createElement("script");
-        script.src = loaderUrl;
-        //script.onload = () => { CreateUnityLoader();   };
-        document.body.appendChild(script);
-
-        WaitForZCVLoad();
-
-        function WaitForZCVLoad() {
-            if (zappar.loaded()) {
-                //loadingCover.style.display = "none"; 
-                CreateUnityLoader();
-                return;
-            }
-            setTimeout(WaitForZCVLoad, 500);
-        }
-
-        function CreateUnityLoader() {
-            createUnityInstance(canvas, config, (progress) => {
-                spinner.style.display = "none";
-                progressBarEmpty.style.display = "";
-                progressBarFull.style.width = `${100 * progress}%`;
-            }).then((unityInstance) => {
-                loadingCover.style.display = "none";
-                //WaitForZCVLoad();
-            }).catch((message) => {
-                alert(message);
-            });
-        }
-
+      }
+      %UNITY_CUSTOM_WEBXR_POLYFILL_CONFIG%
+      var unityInstance = UnityLoader.instantiate("unityContainer", "%UNITY_WEBGL_BUILD_URL%", {onProgress: UnityProgress});
     </script>
-</body>
-
+  </head>
+  <body>
+    <div class="webgl-content" style="width: 100%; height: 100%">
+      <div id="unityContainer" style="width: 100%; height: 100%"></div>
+      <div class="footer">
+        <div class="webgl-logo"></div>
+        <button class="entervr" id="entervr" value="Enter VR" disabled>VR</button>
+        <button class="enterar" id="enterar" value="Enter AR" disabled>AR</button>
+        <div class="webxr-link">Using <a href="https://github.com/De-Panther/unity-webxr-export" target="_blank" title="WebXR Export">WebXR Export</a></div>
+        <div class="title">%UNITY_WEB_NAME%</div>
+      </div>
+    </div>
+    <script>
+      let enterARButton = document.getElementById('enterar');
+      let enterVRButton = document.getElementById('entervr');
+      
+      document.addEventListener('onARSupportedCheck', function (event) {
+        enterARButton.disabled = !event.detail.supported;
+      }, false);
+      document.addEventListener('onVRSupportedCheck', function (event) {
+        enterVRButton.disabled = !event.detail.supported;
+      }, false);
+      
+      enterARButton.addEventListener('click', function (event) {
+        unityInstance.Module.WebXR.toggleAR();
+      }, false);
+      enterVRButton.addEventListener('click', function (event) {
+        unityInstance.Module.WebXR.toggleVR();
+      }, false);
+    </script>
+  </body>
 </html>
