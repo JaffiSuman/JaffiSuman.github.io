@@ -1,9 +1,9 @@
 #!/bin/bash
 function fgit {
-git add 1.json 
+git add --all
 git commit  -m "1"
 git push origin main
-sleep 10
+sleep 25
 }
 
 for (( i=1; i <= 10; i++ ))
