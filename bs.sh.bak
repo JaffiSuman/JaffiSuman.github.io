@@ -3,7 +3,7 @@ function fgit {
 git add --all
 git commit  -m "1"
 git push origin main
-sleep 60
+sleep 25
 }
 
 for (( i=1; i <= 10; i++ ))
